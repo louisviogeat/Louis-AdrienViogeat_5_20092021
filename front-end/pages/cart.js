@@ -15,40 +15,90 @@ function getProduct() {
         }).then(function(value) {
             console.log(value);
             const main = document.getElementById('main');
-            const product = displayProduct(value);
+            const product = displayProduct();
             main.appendChild(product);
         }).catch(function(err) {
             
         });
 }
 
-function displayProduct(product) {
-    const divCard = document.createElement('div');
-    divCard.classList.add('card');
-    divCard.style.width = '18rem';
+function displayProduct() {
+// afficher le nom du produit, le compteur, le prix unitaire et le prix total
 
-    const img = document.createElement('img');
-    img.classList.add('card-img-top');
-    img.setAttribute('src', product.imageUrl);
-    img.setAttribute('alt', product.name);
+    const th0 = document.createElement('th');
+    th0.setAttribute('scope', 'col');
+    th0.textContent = '#';
 
-    const divBody = document.createElement('div');
-    divBody.classList.add('card-body');
+    const th1 = document.createElement('th');
+    th1.setAttribute('scope', 'col');
+    th1.textContent = 'Nom du produit';
 
-    const h5 = document.createElement('h5');
-    h5.classList.add('card-title');
-    h5.textContent = product.name;
+    const th2 = document.createElement('th');
+    th2.setAttribute('scope', 'col');
+    th2.textContent = 'Quantité';
 
-    const p = document.createElement('p');
-    p.classList.add('card-text');
-    p.textContent = product.price/100 + '€';
+    const th3 = document.createElement('th');
+    th3.setAttribute('scope', 'col');
+    th3.textContent = 'Prix unitaire';
 
-    divBody.appendChild(h5);
-    divBody.appendChild(p);
-    divCard.appendChild(img);
-    divCard.appendChild(divBody);
+    const th4 = document.createElement('th');
+    th4.setAttribute('scope', 'col');
+    th4.textContent = 'Prix total';
 
-    return divCard;
+    const th5 = document.createElement('th');
+    th5.setAttribute('scope', 'col');
+    th5.textContent = '';
+
+    const trCol = document.createElement('tr');
+
+    const thead = document.createElement('thead');
+
+    // boucle for pour les td (lignes)
+/*
+    const thRow1 = document.createElement('th');
+    thRow1.setAttribute('scope', 'row');
+    thRow1.textContent = '1';
+
+    const td1 = document.createElement('td');
+    td1.textContent = 'Nom produit';
+
+    const td2 = document.createElement('td');
+    td2.textContent = 'Quantité';
+
+    const td3 = document.createElement('td');
+    td3.textContent = 'PU';
+
+    const td4 = document.createElement('td');
+    td4.textContent = 'Px total';
+
+    const trRow1 = document.createElement('tr');
+
+    const tbody = document.createElement('tbody');
+*/
+    const table = document.createElement('table');
+    table.classList.add('table');
+    table.classList.add('table-striped');
+
+
+    trCol.appendChild(th0);
+    trCol.appendChild(th1);
+    trCol.appendChild(th2);
+    trCol.appendChild(th3);
+    trCol.appendChild(th4);
+    trCol.appendChild(th5);
+    thead.appendChild(tr);
+/*
+    trRow1.appendChild(thRow1);
+    trRow1.appendChild(td1);
+    trRow1.appendChild(td2);
+    trRow1.appendChild(td3);
+    trRow1.appendChild(td4);
+    tbody.appendChild(trRow1);
+*/
+    table.appendChild(thead);
+//    table.appendChild(tbody);
+
+    return table;
 }
 
 

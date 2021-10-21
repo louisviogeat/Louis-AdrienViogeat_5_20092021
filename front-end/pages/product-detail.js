@@ -1,8 +1,6 @@
 urlApi = 'http://127.0.0.1:3000/api/cameras';
 
-productAdded = [];
-
-
+productAdded = JSON.parse(localStorage.getItem('id'));
 
 function getUrl() {
     const currentUrl = document.location.href;
@@ -111,28 +109,25 @@ function displayLenses(lenses) {
   return div; 
 }
 
-
-
-
 function addToCart(id) {
-    const stored = JSON.parse(localStorage.getItem('id'));
-    console.log(stored);
-    if (stored) {
-        const index = stored.findIndex(product => product.id === id);
+
+    if (this.productAdded) {
+        const index = this.productAdded
+            .findIndex(product => product.id === id);
         if (index >= 0) {
             console.log('ici');
-            stored[index].count++;            
+            this.productAdded[index].count++;            
         } else {
-            stored.push({id, count: 1 });
+            this.productAdded.push({id, count: 1 });
         }
-        console.log(stored);
-
-        localStorage.setItem('id', JSON.stringify(stored));        
+        localStorage.setItem('id', JSON.stringify(this.productAdded));        
     } else {
         localStorage.setItem('id', JSON.stringify([{id, count: 1 }]));
     }
+    counter(this.productAdded);
     
-
 }
+
+displayCart(this.productAdded);
 
 
