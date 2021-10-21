@@ -9,47 +9,70 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
         integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
         crossorigin="anonymous">
+    <link rel="stylesheet" href="/front-end/styles.css">
     <title>Détail du produit</title>
 </head>
 <body>
     <header>
-        <div class="bg-light">
-            <div class="container">
-                <nav class="navbar navbar-expand navbar-light">
-                    <a class="navbar-brand" href="../index.html">Orinoco</a>
-                    <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="./product-list.html">Liste des produits</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="./product-detail.html">Détail du produit</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="./cart.html">Panier</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="./confirmation.html">Confirmation de commande</a>
-                    </li>
-                    </ul>
-                </nav>                
+        <nav class="navbar navbar-expand-lg navbar-light bg-logo">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="/front-end/index.html"><img src="/front-end/assets/logo.png" alt="logo"></a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                  <a class="nav-link active" aria-current="page" href="/front-end/pages/product-list.html">Liste des produits</a>
+                  <a class="nav-link" href="/front-end/pages/cart.html">Panier d'achat</a>
+                </div>
+                
+              </div>
+              <div id="cart">
+              </div>
             </div>
-        </div>
-        <h1>Détail du produit {{}}</h1>
+          </nav>
+
     </header>
     <section>
-        <div class="card" style="width: 18rem;">
-            <img src="..." class="card-img-top" alt="...">
+        <h1>Détail du produit</h1>
+        <div id="main"></div>
+          <select name="skills" class="ui fluid search dropdown">
+            <option value="">Skills</option>
+            <option value="angular">Angular</option>
+            <option value="css">CSS</option>
+            <option value="design">Graphic Design</option>
+          </select>
+      <!-- 
+        <div class="card" width="100px">
+            <img src="/front-end/assets/logo.png" alt="">
             <div class="card-body">
-              <h5 class="card-title">Nom du produit</h5>
-              <p class="card-text">texte</p>
-              <a href="#" class="btn btn-primary">Faire qq chose</a>
-            </div>
+                <h5 class="card-title">Lalala</h5>
+                <p>ohohoho</p>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Dropdown button
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" href="#">Action</a>
+                      <a class="dropdown-item" href="#">Another action</a>
+                      <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                  </div>
+            </div> 
           </div>
+-->
+       
     </section>
     <footer>
 
     </footer>
-
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous">
+    </script>
+    <script src="../counter-cart.js"></script>
     <script src="./product-detail.js"></script>
+
 </body>
 </html>
