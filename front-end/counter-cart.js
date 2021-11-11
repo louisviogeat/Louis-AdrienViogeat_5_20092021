@@ -5,16 +5,14 @@ function displayCart(productAdded) {
     span.classList.add('badge');
     span.classList.add('bg-secondary');
     span.textContent = counter(productAdded);
-        //mettre le counter();
 
     const button = document.createElement('button');
     button.classList.add('btn');
     button.classList.add('btn-primary');
     button.textContent = 'Panier '
 
-
-
     const a = document.createElement('a');
+    a.setAttribute('id', 'cart-button')
     a.classList.add('text-muted');
     a.classList.add('text-decoration-none');
     a.setAttribute('href', '/front-end/pages/cart.html');
@@ -23,7 +21,11 @@ function displayCart(productAdded) {
 
     button.appendChild(span);
     a.appendChild(button);
-    cart.appendChild(a);
+    if (document.getElementById('cart-button')) {
+        cart.replaceChild(a, document.getElementById('cart-button'));
+    } else {
+        cart.appendChild(a);
+    }
 
     return cart
 

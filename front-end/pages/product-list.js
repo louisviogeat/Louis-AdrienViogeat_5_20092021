@@ -9,7 +9,7 @@ fetch(urlApi).then((res) => {
   .then(function(value) {
     const products = value
     console.log('products', products);
-    const main = document.getElementById('main')
+    const main = document.getElementById('list')
     for (let i = 0; i < products.length; i++) {
 
       const product = displayProducts(products[i]);

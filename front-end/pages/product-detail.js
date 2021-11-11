@@ -2,6 +2,8 @@ urlApi = 'http://127.0.0.1:3000/api/cameras';
 
 productAdded = JSON.parse(localStorage.getItem('id'));
 
+console.log(productAdded);
+
 function getUrl() {
     const currentUrl = document.location.href;
     const url = new URL(currentUrl);
@@ -18,7 +20,7 @@ fetch(urlApi + '/' + getUrl())
     }).then(function(value) {
         console.log(value);
         
-        const main = document.getElementById('main');
+        const main = document.getElementById('detail');
         const product = displayProduct(value);
         const lenses = displayLenses(value.lenses);
         console.log(product);
@@ -58,13 +60,15 @@ function displayProduct(product) {
 
     const price = document.createElement('p');
     price.classList.add('card-text');
-    price.textContent = product.price/100 + '€';
+    price.textContent = (product.price/100).toLocaleString() + '€';
 
     const button = document.createElement('button');
     button.classList.add('btn');
     button.classList.add('btn-outline-success');
     button.textContent = 'Ajouter au panier';
-    button.onclick = function(){addToCart(product._id);};
+    button.onclick = function(){
+        addToCart(product._id);
+    };
 
     divBody.appendChild(h5);
     divBody.appendChild(description);
@@ -76,6 +80,8 @@ function displayProduct(product) {
 
     return divCard;
 }
+
+
 
 function displayLenses(lenses) {
 
@@ -109,25 +115,10 @@ function displayLenses(lenses) {
   return div; 
 }
 
-function addToCart(id) {
-
-    if (this.productAdded) {
-        const index = this.productAdded
-            .findIndex(product => product.id === id);
-        if (index >= 0) {
-            console.log('ici');
-            this.productAdded[index].count++;            
-        } else {
-            this.productAdded.push({id, count: 1 });
-        }
-        localStorage.setItem('id', JSON.stringify(this.productAdded));        
-    } else {
-        localStorage.setItem('id', JSON.stringify([{id, count: 1 }]));
-    }
-    counter(this.productAdded);
-    
-}
-
 displayCart(this.productAdded);
+
+
+
+// displayCart(this.productAdded);
 
 

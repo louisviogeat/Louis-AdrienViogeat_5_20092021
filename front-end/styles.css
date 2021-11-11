@@ -6,4 +6,22 @@
     height: 50%;
 }
 
+td {
+    text-align: justify
+}
+
+#list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+#list .card {
+    margin: 2%;
+}
+
+@media screen {
+    
+}
 
