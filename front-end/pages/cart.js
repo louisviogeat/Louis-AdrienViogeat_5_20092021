@@ -1,8 +1,11 @@
 
-// Faire le formulaire sur la page panier
-// récupérer les données dans le local storage
-// Utiliser des regex
-// Les récupérer dans la page confirmation de paiement
+
+
+// envoyer les données de l'utilisateur dans le back-end (patch ou put voir specif)
+// le résultat du patch/post est le n° de confirmation
+// Dans la page confirmation de paiement, afficher le n° de confirmation
+
+// Faire le plan de test
 
 // Revoir le design du site
 
@@ -15,21 +18,18 @@ productAdded = JSON.parse(localStorage.getItem('id'));
 const productString = localStorage.getItem('id');
 const products = JSON.parse(productString);
 
-console.log('localStorage', products);
-console.log('productAdded', productAdded);
-
 for (const product of products) {
-    getOneProduct(product).then(function(value) {
-            const tbody = document.getElementById('tableOfProduct');
-            const productLine = displayProductLine(value, product.count);
-            tbody.appendChild(productLine);
+    getOneProduct(product).then(function (value) {
+        const tbody = document.getElementById('tableOfProduct');
+        const productLine = displayProductLine(value, product.count);
+        tbody.appendChild(productLine);
         /*            
 
         */
-        }).catch(function(err) {
-            
-        });     
- }
+    }).catch(function (err) {
+
+    });
+}
 
 async function addFooter() {
     const tfoot = document.getElementById('footerWithTotal');
@@ -47,11 +47,33 @@ function getOneProduct(product) {
                 return res.json();
             }
         });
- }
+}
+
+function orderProduct(productAdded, contact) {
+    console.log(productAdded);
+    console.log(contact);
+    const products = [];
+    productAdded.forEach(product => {
+        products.push(product.id);
+    });
+    const order = {
+        contact,
+        products
+    }
+    console.log(order);
+    return fetch((urlApi + '/order'), {
+        method: 'post',
+        body: order
+    }).then((res) => {
+        if (res.ok) {
+            console.log(res.json());
+        } else {
+            console.log(res);
+        }
+    })
+}
 
 function displayProductLine(product, quantity) {
-    console.log('displayProductLine', product);
-    console.log('displayProductLine', quantity);
 
     const th = document.createElement('th');
     th.setAttribute('scope', 'row');
@@ -61,16 +83,16 @@ function displayProductLine(product, quantity) {
     td1.textContent = quantity.toLocaleString();
 
     const td2 = document.createElement('td');
-    td2.textContent = (product.price/100).toLocaleString() + '€';
+    td2.textContent = (product.price / 100).toLocaleString() + '€';
 
     const td3 = document.createElement('td');
-    td3.textContent = (quantity * (product.price/100)).toLocaleString() + '€';
+    td3.textContent = (quantity * (product.price / 100)).toLocaleString() + '€';
 
     const addButton = document.createElement('button');
     addButton.classList.add('btn');
     addButton.classList.add('btn-light');
     addButton.setAttribute('type', 'button');
-    addButton.onclick = function(){addToCart(product._id);}
+    addButton.onclick = function () { addToCart(product._id); }
 
     const iPlus = document.createElement('i');
     iPlus.classList.add('fas');
@@ -80,16 +102,16 @@ function displayProductLine(product, quantity) {
     removeButton.classList.add('btn');
     removeButton.classList.add('btn-light');
     removeButton.setAttribute('type', 'button');
-    removeButton.onclick = function(){removeFromCart(product._id);};
+    removeButton.onclick = function () { removeFromCart(product._id); };
 
     const iMinus = document.createElement('i');
     iMinus.classList.add('fas');
     iMinus.classList.add('fa-minus');
 
     const td4 = document.createElement('td');
-    
+
     const tr = document.createElement('tr');
-    
+
     addButton.appendChild(iPlus);
     removeButton.appendChild(iMinus);
     td4.appendChild(addButton);
@@ -106,11 +128,11 @@ function displayProductLine(product, quantity) {
 async function displayFooterTotal(listOfProductAdded) {
     let totalQuantity = 0;
     let totalUnitPrice = 0;
-   
+
     for (const product of listOfProductAdded) {
         totalQuantity = totalQuantity + product.count;
         await getOneProduct(product).then((res) => {
-            totalUnitPrice = totalUnitPrice + res.price/100;
+            totalUnitPrice = totalUnitPrice + res.price / 100;
         });
     }
 
@@ -127,9 +149,9 @@ async function displayFooterTotal(listOfProductAdded) {
     const td3 = document.createElement('td');
     td3.textContent = (totalQuantity * totalUnitPrice).toLocaleString() + '€';
 
-    
+
     const tr = document.createElement('tr');
-    
+
     tr.appendChild(th);
     tr.appendChild(td1);
     tr.appendChild(td2);
@@ -138,65 +160,76 @@ async function displayFooterTotal(listOfProductAdded) {
     return tr;
 }
 
-function getUserData() {
+function getContactData() {
 
-    let user = {
+    let contact = {
         firstName: document.getElementById('firstName').value,
         lastName: document.getElementById('lastName').value,
         address: document.getElementById('address').value,
         city: document.getElementById('city').value,
         email: document.getElementById('email').value
     };
-    const fieldNotFilled = Object.keys(user).some((e) => user[e] === ''); 
+    const fieldNotFilled = Object.keys(contact).some((e) => contact[e] === '');
     if (fieldNotFilled) {
         alert('Tous les champs doivent être complétés')
     } else {
-        validatorField(user);
-        if (validatorField(user)) {
-            console.log('zé barti');
-            localStorage.setItem('user', JSON.stringify(user));
+        validatorField(contact);
+        if (validatorField(contact)) {
+            orderProduct(this.productAdded, contact);
+            //window.location.href = '/front-end/pages/confirmation.html';
         }
     }
-    console.log(user);
 }
 
-function validatorField(user) {
-    if (!user.firstName.match(/^([a-zA-Z-]+)$/i)) {
-        alert('Le champ prénom ne doit comporter que des lettres')
-        return false;
-    } else {
-        if (!user.lastName.match(/^([a-zA-Z-]+)$/i)) {
-            alert('Le champ nom ne doit comporter que des lettres')
-            return false;
-        } else {
-            if (!user.address.match(/^([0-9a-zA-Z- ]+)$/i)) {
-                alert('Le champ adresse ne doit comporter que des chiffres et des lettres')
-                return false;
-            } else {
-                if (!user.city.match(/^([a-zA-Z-]+)$/i)) {
-                    alert('Le champ ville ne doit comporter que des lettres')
-                    return false;
-                } else {
-                    if (!user.email.match(/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i)) {
-                        alert('Le champ email doit être au bon format')
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
-            }
-        }
+function validatorField(contact) {
+    let verif = true
+    resetAlert();
+    if (!contact.lastName.match(/^([a-zA-Z-' ]+)$/i)) {
+        const lastName = document.getElementById('errorLastName');
+        lastName.textContent = 'Le champ Nom ne doit comporter que des lettres';
+        lastName.style.display = 'block';
+        verif = false;
+    }
+    if (!contact.firstName.match(/^([a-zA-Z-' ]+)$/i)) {
+        const firstName = document.getElementById('errorFirstName');
+        firstName.textContent = 'Le champ Prénom ne doit comporter que des lettres';
+        firstName.style.display = 'block';
+        verif = false;
+    }
+    if (!contact.address.match(/^([0-9a-zA-Z-' ]+)$/i)) {
+        const address = document.getElementById('errorAddress');
+        address.textContent = 'Le champ Adresse ne doit comporter que des chiffres et des lettres';
+        verif = false;
+    }
+    if (!contact.city.match(/^([a-zA-Z- ]+)$/i)) {
+        const city = document.getElementById('errorCity');
+        city.textContent = 'Le champ Ville ne doit comporter que des lettres';
+        verif = false;
+    }
+    if (!contact.email.match(/^([a-zA-Z0-9_\-.]{1,}[@]{1}[a-zA-Z0-9_\-.]{1,})$/i)) {
+        const email = document.getElementById('errorEmail');
+        email.textContent = 'Le champ Email doit être au bon format';
+        verif = false;
+    }
+    return verif;
+}
+
+function resetAlert() {
+    const errorForm = document.getElementsByClassName('errorForm');
+    for (const error of errorForm) {
+        error.textContent = '';
+        error.style.display = 'none';
     }
 }
 
 document.getElementById('commandButton')
-.addEventListener(
-    'click',
-    function(event){
-        event.preventDefault();
-        getUserData();
-    }
-);
+    .addEventListener(
+        'click',
+        function (event) {
+            event.preventDefault();
+            getContactData();
+        }
+    );
 
 
 // pseudo.match(/^([0-9a-zA-Z_]){6,20}$/)

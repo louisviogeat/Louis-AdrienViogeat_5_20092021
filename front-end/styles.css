@@ -21,6 +21,10 @@ td {
     margin: 2%;
 }
 
+.errorForm {
+    display: none;
+}
+
 @media screen {
     
 }
