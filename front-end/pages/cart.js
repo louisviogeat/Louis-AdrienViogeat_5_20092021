@@ -4,6 +4,7 @@ totalAllPrice = 0;
 
 let numberOfLines = 0;
 const productAdded = JSON.parse(localStorage.getItem('id'));
+
 for (const product of productAdded) {
     getOneProduct(product).then(function (productData) {
         const tbody = document.getElementById('tableOfProduct');

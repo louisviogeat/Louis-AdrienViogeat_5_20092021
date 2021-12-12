@@ -6,15 +6,10 @@ fetch(urlApi).then((res) => {
   }
 }).then(function (value) {
   const products = value
-
   const main = document.getElementById('list')
   for (let i = 0; i < products.length; i++) {
-
     const product = displayProducts(products[i]);
-
-
     main.appendChild(product);
-
   }
 })
   .catch(function (err) {
