@@ -1,5 +1,10 @@
-function displayCart(productAdded) {
-    
+displayCart();
+
+function displayCart() {
+    if (!localStorage.getItem('id')) {
+        return;
+    }
+    const productAdded = JSON.parse(localStorage.getItem('id'));
     const span = document.createElement('span');
     span.setAttribute('id', 'count');
     span.classList.add('badge');
@@ -28,21 +33,14 @@ function displayCart(productAdded) {
     }
 
     return cart
-
 }
 
-function counter(productAdded) {
-    // compter la somme des count de l'objet avec map
+function counter() {
+    const productAdded = JSON.parse(localStorage.getItem('id'));
+    if (!productAdded) {
+        return;
+    }
     return productAdded.map(
         product => product.count
-        ).reduce((prev, next) => prev + next);
+    ).reduce((prev, next) => prev + next);
 }
-
-function sum(prev, next){
-    return prev + next;
-  }
-  
-
-
-
-

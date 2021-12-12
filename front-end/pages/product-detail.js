@@ -1,15 +1,11 @@
 urlApi = 'http://127.0.0.1:3000/api/cameras';
 
-productAdded = JSON.parse(localStorage.getItem('id'));
-
-console.log(productAdded);
-
 function getUrl() {
     const currentUrl = document.location.href;
     const url = new URL(currentUrl);
     const id = url.searchParams.get("id");
 
-   return id;
+    return id;
 }
 
 fetch(urlApi + '/' + getUrl())
@@ -17,23 +13,14 @@ fetch(urlApi + '/' + getUrl())
         if (res.ok) {
             return res.json();
         }
-    }).then(function(value) {
-        console.log(value);
-        
+    }).then(function (value) {
         const main = document.getElementById('detail');
         const product = displayProduct(value);
         const lenses = displayLenses(value.lenses);
-        console.log(product);
-        console.log(lenses);
         main.appendChild(product);
-
-
-
-    }).catch(function(err) {
-        
+    }).catch(function (err) {
+        alert(err);
     });
-
-// Mettre la fonction display(product) dans un fichier.js indépendant pour la liste et le détail
 
 function displayProduct(product) {
     const divCard = document.createElement('div');
@@ -60,14 +47,15 @@ function displayProduct(product) {
 
     const price = document.createElement('p');
     price.classList.add('card-text');
-    price.textContent = (product.price/100).toLocaleString() + '€';
+    price.textContent = (product.price / 100).toLocaleString() + '€';
 
     const button = document.createElement('button');
     button.classList.add('btn');
     button.classList.add('btn-outline-success');
     button.textContent = 'Ajouter au panier';
-    button.onclick = function(){
-        addToCart(product._id);
+    button.onclick = function () {
+        const productAdded = JSON.parse(localStorage.getItem('id'));
+        addToCart(product._id, productAdded);
     };
 
     divBody.appendChild(h5);
@@ -81,8 +69,6 @@ function displayProduct(product) {
     return divCard;
 }
 
-
-
 function displayLenses(lenses) {
 
     const div = document.createElement('div');
@@ -92,7 +78,7 @@ function displayLenses(lenses) {
     h2.classList.add('sub');
     h2.classList.add('header');
     h2.textContent = 'Lentilles';
-    
+
     const select = document.createElement('select');
     select.classList.add('ui');
     select.classList.add('fluid');
@@ -100,25 +86,15 @@ function displayLenses(lenses) {
     select.classList.add('dropdown');
     select.setAttribute('name', 'lenses');
 
-
     for (let i = 0; i < lenses.length; i++) {
         const option = document.createElement('option');
         option.setAttribute('value', lenses[i]);
         option.textContent = lenses[i];
-
         select.appendChild(option);
     }
 
     div.appendChild(h2);
     div.appendChild(select);
 
-  return div; 
+    return div;
 }
-
-displayCart(this.productAdded);
-
-
-
-// displayCart(this.productAdded);
-
-

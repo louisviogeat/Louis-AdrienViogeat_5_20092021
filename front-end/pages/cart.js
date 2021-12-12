@@ -1,79 +1,38 @@
-
-
-
-// envoyer les données de l'utilisateur dans le back-end (patch ou put voir specif)
-// le résultat du patch/post est le n° de confirmation
-// Dans la page confirmation de paiement, afficher le n° de confirmation
-
-// Faire le plan de test
-
-// Revoir le design du site
-
-
 urlApi = 'http://127.0.0.1:3000/api/cameras';
 
-productAdded = JSON.parse(localStorage.getItem('id'));
+totalAllPrice = 0;
 
-
-const productString = localStorage.getItem('id');
-const products = JSON.parse(productString);
-
-for (const product of products) {
-    getOneProduct(product).then(function (value) {
+let numberOfLines = 0;
+const productAdded = JSON.parse(localStorage.getItem('id'));
+for (const product of productAdded) {
+    getOneProduct(product).then(function (productData) {
         const tbody = document.getElementById('tableOfProduct');
-        const productLine = displayProductLine(value, product.count);
+        const productLine = displayProductLine(productData, product.count, productAdded);
         tbody.appendChild(productLine);
-        /*            
-
-        */
+        totalAllPrice += (productData.price / 100 * product.count)
+        numberOfLines++;
+        addFooter(numberOfLines, productAdded);
     }).catch(function (err) {
-
-    });
-}
-
-async function addFooter() {
-    const tfoot = document.getElementById('footerWithTotal');
-    const total = await displayFooterTotal(this.productAdded);
-    tfoot.appendChild(total);
-}
-
-addFooter();
-
-
-function getOneProduct(product) {
-    return fetch(urlApi + '/' + product.id)
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            }
-        });
-}
-
-function orderProduct(productAdded, contact) {
-    console.log(productAdded);
-    console.log(contact);
-    const products = [];
-    productAdded.forEach(product => {
-        products.push(product.id);
-    });
-    const order = {
-        contact,
-        products
-    }
-    console.log(order);
-    return fetch((urlApi + '/order'), {
-        method: 'post',
-        body: order
-    }).then((res) => {
-        if (res.ok) {
-            console.log(res.json());
-        } else {
-            console.log(res);
-        }
+        alert(err);
     })
 }
 
-function displayProductLine(product, quantity) {
+async function getOneProduct(product) {
+    const res = await fetch(urlApi + '/' + product.id);
+    if (res.ok) {
+        return res.json();
+    }
+}
+
+async function addFooter(numberOfLines, productAdded) {
+    if (numberOfLines === productAdded.length) {
+        const tfoot = document.getElementById('footerWithTotal');
+        const total = await displayFooterTotal();
+        tfoot.appendChild(total);
+    }
+}
+
+function displayProductLine(product, quantity, productAdded) {
 
     const th = document.createElement('th');
     th.setAttribute('scope', 'row');
@@ -86,13 +45,18 @@ function displayProductLine(product, quantity) {
     td2.textContent = (product.price / 100).toLocaleString() + '€';
 
     const td3 = document.createElement('td');
-    td3.textContent = (quantity * (product.price / 100)).toLocaleString() + '€';
+    const td3Span = document.createElement('span');
+    const totalPrice = quantity * (product.price / 100);
+    td3Span.textContent = totalPrice.toLocaleString();
+
+    td3.appendChild(td3Span);
+    td3.textContent += '€'
 
     const addButton = document.createElement('button');
     addButton.classList.add('btn');
     addButton.classList.add('btn-light');
     addButton.setAttribute('type', 'button');
-    addButton.onclick = function () { addToCart(product._id); }
+    addButton.onclick = function () { addToCart(product._id, productAdded); }
 
     const iPlus = document.createElement('i');
     iPlus.classList.add('fas');
@@ -102,7 +66,7 @@ function displayProductLine(product, quantity) {
     removeButton.classList.add('btn');
     removeButton.classList.add('btn-light');
     removeButton.setAttribute('type', 'button');
-    removeButton.onclick = function () { removeFromCart(product._id); };
+    removeButton.onclick = function () { removeFromCart(product._id, productAdded); };
 
     const iMinus = document.createElement('i');
     iMinus.classList.add('fas');
@@ -125,30 +89,21 @@ function displayProductLine(product, quantity) {
     return tr;
 }
 
-async function displayFooterTotal(listOfProductAdded) {
-    let totalQuantity = 0;
-    let totalUnitPrice = 0;
-
-    for (const product of listOfProductAdded) {
-        totalQuantity = totalQuantity + product.count;
-        await getOneProduct(product).then((res) => {
-            totalUnitPrice = totalUnitPrice + res.price / 100;
-        });
-    }
+async function displayFooterTotal() {
 
     const th = document.createElement('th');
     th.setAttribute('scope', 'row');
     th.textContent = 'Total';
 
     const td1 = document.createElement('td');
-    td1.textContent = totalQuantity.toLocaleString();
 
     const td2 = document.createElement('td');
-    td2.textContent = totalUnitPrice.toLocaleString() + '€';
 
     const td3 = document.createElement('td');
-    td3.textContent = (totalQuantity * totalUnitPrice).toLocaleString() + '€';
-
+    const td3Span = document.createElement('span');
+    td3Span.textContent = this.totalAllPrice.toString();
+    td3.appendChild(td3Span);
+    td3.textContent += '€';
 
     const tr = document.createElement('tr');
 
@@ -158,6 +113,31 @@ async function displayFooterTotal(listOfProductAdded) {
     tr.appendChild(td3);
 
     return tr;
+}
+
+function orderProduct(productAdded, contact, totalAllPrice) {
+    const products = [];
+    productAdded.forEach(product => {
+        products.push(product.id);
+    });
+    const order = {
+        'contact': contact,
+        'products': products
+    }
+    fetch(('http://127.0.0.1:3000/api/cameras/order'), {
+        method: "POST",
+        body: JSON.stringify(order),
+        headers: {
+            "Content-type": "application/json"
+        },
+    }).then((res) => {
+        if (res.ok) {
+            return res.json();
+        }
+    }).then((confirmation) => {
+        localStorage.setItem('orderId', confirmation.orderId);
+        localStorage.setItem('totalAllPrice', JSON.stringify(totalAllPrice));
+    })
 }
 
 function getContactData() {
@@ -175,8 +155,9 @@ function getContactData() {
     } else {
         validatorField(contact);
         if (validatorField(contact)) {
-            orderProduct(this.productAdded, contact);
-            //window.location.href = '/front-end/pages/confirmation.html';
+            const productAdded = JSON.parse(localStorage.getItem('id'));
+            orderProduct(productAdded, contact, this.totalAllPrice);
+            window.location.href = '/front-end/pages/confirmation.html';
         }
     }
 }
@@ -230,8 +211,5 @@ document.getElementById('commandButton')
             getContactData();
         }
     );
-
-
-// pseudo.match(/^([0-9a-zA-Z_]){6,20}$/)
 
 

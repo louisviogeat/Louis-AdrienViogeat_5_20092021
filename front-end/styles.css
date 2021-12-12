@@ -10,7 +10,7 @@ td {
     text-align: justify
 }
 
-#list {
+#list, #detail {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -25,7 +25,16 @@ td {
     display: none;
 }
 
-@media screen {
-    
+
+@media screen and (max-width: 750px) {
+    #list {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    #list .card {
+        width: 250px !important;;
+    }
 }
 
