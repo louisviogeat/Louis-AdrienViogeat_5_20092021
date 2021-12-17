@@ -19,6 +19,7 @@ for (const product of productAdded) {
 }
 
 async function getOneProduct(product) {
+    // Récupérer un produit de l'API
     const res = await fetch(urlApi + '/' + product.id);
     if (res.ok) {
         return res.json();
@@ -26,6 +27,7 @@ async function getOneProduct(product) {
 }
 
 async function addFooter(numberOfLines, productAdded) {
+    // Ajouter une ligne total au tableau
     if (numberOfLines === productAdded.length) {
         const tfoot = document.getElementById('footerWithTotal');
         const total = await displayFooterTotal();
@@ -34,7 +36,7 @@ async function addFooter(numberOfLines, productAdded) {
 }
 
 function displayProductLine(product, quantity, productAdded) {
-
+    // Afficher une ligne produit du tableau
     const th = document.createElement('th');
     th.setAttribute('scope', 'row');
     th.textContent = product.name;
@@ -91,7 +93,7 @@ function displayProductLine(product, quantity, productAdded) {
 }
 
 async function displayFooterTotal() {
-
+    // Afficher la ligne total du tableau
     const th = document.createElement('th');
     th.setAttribute('scope', 'row');
     th.textContent = 'Total';
@@ -117,6 +119,7 @@ async function displayFooterTotal() {
 }
 
 function orderProduct(productAdded, contact, totalAllPrice) {
+    // Commander un produit
     const products = [];
     productAdded.forEach(product => {
         products.push(product.id);
@@ -142,7 +145,7 @@ function orderProduct(productAdded, contact, totalAllPrice) {
 }
 
 function getContactData() {
-
+    // Récupérer les données du formulaire de contact
     let contact = {
         firstName: document.getElementById('firstName').value,
         lastName: document.getElementById('lastName').value,
@@ -164,6 +167,7 @@ function getContactData() {
 }
 
 function validatorField(contact) {
+    // Vérifier le format des champs
     let verif = true
     resetAlert();
     if (!contact.lastName.match(/^([a-zA-Z-' ]+)$/i)) {
@@ -181,22 +185,26 @@ function validatorField(contact) {
     if (!contact.address.match(/^([0-9a-zA-Z-' ]+)$/i)) {
         const address = document.getElementById('errorAddress');
         address.textContent = 'Le champ Adresse ne doit comporter que des chiffres et des lettres';
+        firstName.style.display = 'block';
         verif = false;
     }
     if (!contact.city.match(/^([a-zA-Z- ]+)$/i)) {
         const city = document.getElementById('errorCity');
         city.textContent = 'Le champ Ville ne doit comporter que des lettres';
+        firstName.style.display = 'block';
         verif = false;
     }
     if (!contact.email.match(/^([a-zA-Z0-9_\-.]{1,}[@]{1}[a-zA-Z0-9_\-.]{1,})$/i)) {
         const email = document.getElementById('errorEmail');
         email.textContent = 'Le champ Email doit être au bon format';
+        firstName.style.display = 'block';
         verif = false;
     }
     return verif;
 }
 
 function resetAlert() {
+    // Retirer les messages d'alerte du formulaire
     const errorForm = document.getElementsByClassName('errorForm');
     for (const error of errorForm) {
         error.textContent = '';

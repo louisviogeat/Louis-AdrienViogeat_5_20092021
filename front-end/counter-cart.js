@@ -1,6 +1,7 @@
 displayCart();
 
 function displayCart() {
+    // Afficher une carte produit
     if (!localStorage.getItem('id')) {
         return;
     }
@@ -36,6 +37,7 @@ function displayCart() {
 }
 
 function counter() {
+    // Compter le nombre de produits ajoutés
     const productAdded = JSON.parse(localStorage.getItem('id'));
     if (!productAdded) {
         return;

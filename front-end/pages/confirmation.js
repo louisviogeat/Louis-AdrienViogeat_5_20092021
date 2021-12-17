@@ -1,15 +1,21 @@
 retriveLocalStorageData();
 
 function retriveLocalStorageData() {
+    // Récupérer les données du localStorage
     const orderId = localStorage.getItem('orderId');
     const totalPrice = JSON.parse(localStorage.getItem('totalAllPrice'));
     const command = document.getElementById('command');
     const jsCommand = displayCommand(orderId, totalPrice);
 
     command.appendChild(jsCommand);
+
+    localStorage.removeItem('orderId');
+    localStorage.removeItem('totalAllPrice');
+    localStorage.removeItem('id');
 }
 
 function displayCommand(orderId, totalPrice) {
+    // Afficher le récapitulatif de commande
     const divCard = document.createElement('div');
     divCard.classList.add('card');
 

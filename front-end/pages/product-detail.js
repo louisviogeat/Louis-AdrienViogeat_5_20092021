@@ -1,6 +1,7 @@
 urlApi = 'http://127.0.0.1:3000/api/cameras';
 
 function getUrl() {
+    // Récupérer l'id depuis l'url
     const currentUrl = document.location.href;
     const url = new URL(currentUrl);
     const id = url.searchParams.get("id");
@@ -23,6 +24,7 @@ fetch(urlApi + '/' + getUrl())
     });
 
 function displayProduct(product) {
+    // Afficher le détail du produit
     const divCard = document.createElement('div');
     divCard.classList.add('card');
     divCard.style.width = '18rem';
@@ -70,7 +72,7 @@ function displayProduct(product) {
 }
 
 function displayLenses(lenses) {
-
+    // Afficher la liste des lentilles
     const div = document.createElement('div');
 
     const h2 = document.createElement('h2');

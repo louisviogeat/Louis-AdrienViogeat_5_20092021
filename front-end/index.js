@@ -17,6 +17,7 @@ fetch(urlApi).then((res) => {
   });
 
 function displayProducts(product) {
+  // Afficher la liste des produits
   const divCard = document.createElement('div');
   divCard.classList.add('card');
 

@@ -1,4 +1,5 @@
 function addToCart(id, productAdded) {
+    //Ajout d'un produit au panier
     if (!productAdded) {
         localStorage.setItem('id', JSON.stringify([{ id, count: 1 }]));
     } else {
@@ -15,7 +16,7 @@ function addToCart(id, productAdded) {
 }
 
 function removeFromCart(id, productAdded) {
-
+    // Suppression d'un produit au panier
     const index = productAdded
         .findIndex(product => product.id === id);
     if (productAdded[index].count > 1) {
